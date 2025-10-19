@@ -11,6 +11,8 @@ import time
 import os
 from dotenv import load_dotenv
 from restconf_final import *
+from netmiko_final import *
+# from ansible_final import *
 
 #######################################################################################
 # 2. Assign the Webex access token to the variable ACCESS_TOKEN using environment variables.
@@ -89,7 +91,7 @@ while True:
         elif command == "status":
             responseMessage = status()
         elif command == "gigabit_status":
-            pass
+            responseMessage = gigabit_status()
         elif command == "showrun":
             pass
         else:

@@ -6,13 +6,13 @@
 #######################################################################################
 # 1. Import libraries for API requests, JSON formatting, time, os, (restconf_final or netconf_final), netmiko_final, and ansible_final.
 
-import json
 import time
 import os
 from dotenv import load_dotenv
+from requests_toolbelt import MultipartEncoder
 from restconf_final import *
 from netmiko_final import *
-# from ansible_final import *
+from ansible_final import *
 
 #######################################################################################
 # 2. Assign the Webex access token to the variable ACCESS_TOKEN using environment variables.
@@ -93,7 +93,7 @@ while True:
         elif command == "gigabit_status":
             responseMessage = gigabit_status()
         elif command == "showrun":
-            pass
+            responseMessage = showrun()
         else:
             responseMessage = "Error: No command or unknown command"
         
@@ -112,20 +112,19 @@ while True:
         # https://developer.webex.com/docs/basics for more detail
 
         if command == "showrun" and responseMessage == 'ok':
-            pass
-            # filename = "<!!!REPLACEME with show run filename and path!!!>"
-            # fileobject = <!!!REPLACEME with open file!!!>
-            # filetype = "<!!!REPLACEME with Content-type of the file!!!>"
-            # postData = {
-            #     "roomId": <!!!REPLACEME!!!>,
-            #     "text": "show running config",
-            #     "files": (<!!!REPLACEME!!!>, <!!!REPLACEME!!!>, <!!!REPLACEME!!!>),
-            # }
-            # postData = MultipartEncoder(<!!!REPLACEME!!!>)
-            # HTTPHeaders = {
-            # "Authorization": ACCESS_TOKEN,
-            # "Content-Type": <!!!REPLACEME with postData Content-Type!!!>,
-            # }
+            filename = "show_run_66070200_R1.txt"
+            fileobject = open(filename, "rb")
+            filetype = "text/plain"
+            postData = {
+                "roomId": roomIdToGetMessages,
+                "text": "show running config",
+                "files": (filename, fileobject, filetype)
+            }
+            postData = MultipartEncoder(postData)
+            HTTPHeaders = {
+                "Authorization": 'Bearer ' + ACCESS_TOKEN,
+                "Content-Type": postData.content_type,
+            }
         # other commands only send text, or no attached file.
         else:
             postData = {"roomId": roomIdToGetMessages, "text": responseMessage}

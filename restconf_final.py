@@ -37,8 +37,9 @@ def create():
         headers=headers,
         verify=False
     )
-
-    if(resp.status_code >= 200 and resp.status_code <= 299):
+    if resp.status_code == 204:
+        return "Cannot create: Interface loopback 66070200"
+    elif (resp.status_code >= 200 and resp.status_code <= 299):
         print("STATUS OK: {}".format(resp.status_code))
         return "Interface loopback 66070200 is created successfully"
     else:
